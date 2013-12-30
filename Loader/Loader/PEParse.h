@@ -19,7 +19,6 @@ public:
 	// 获取xx表
 	PIMAGE_DATA_DIRECTORY	GetImgDataDirectory( DWORD DataIndex );
 	
-	
 
 	// 修复导入表
 	BOOL BuildImgImportTable();
@@ -30,6 +29,21 @@ public:
 	// 这个函数是这个工程中最重要的一个函数，成败就在这个函数上了。
 	BOOL GetImgModuleHandle();
 	
+private:
+
+	// 获取镜像大小
+	DWORD GetImgSize();
+	
+	// 获取镜像基质
+	DWORD GetImgBase();
+
+	// 获取pe文件数据
+	BOOL ReadPEFile( HANDLE hFile );
+
+	// 这个函数实际是构造pe文件的内存基址。
+	BOOL BuildImg();	
+
+
 private:
 	PIMAGE_DOS_HEADER pImgDosHeader;
 	PIMAGE_NT_HEADERS pImgNtHeader;
