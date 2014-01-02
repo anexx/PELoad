@@ -28,7 +28,11 @@ public:
 	
 	// 这个函数是这个工程中最重要的一个函数，成败就在这个函数上了。
 	BOOL GetImgModuleHandle();
-	
+
+	BOOL CopySections();
+
+	// 跳入到代码入口处执行
+	BOOL JmpToEngtryPoint();
 private:
 
 	// 获取镜像大小

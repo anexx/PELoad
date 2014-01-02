@@ -89,3 +89,62 @@ BOOL PEParse::BuildImg()
 	if ( HModule == NULL )
 		return FALSE;
 }
+
+BOOL PEParse::BuildImgImportTable()
+{
+	PIMAGE_DATA_DIRECTORY pImageDataDirectory = pImgNtHeader->OptionalHeader.DataDirectory[ IMAGE_DIRECTORY_ENTRY_IMPORT ];
+	if ( pImageDataDirectory->Size == 0 )
+		return TRUE;
+	
+	PIMAGE_IMPORT_BY_NAME		pImgImportByName		= NULL;
+	PIMAGE_IMPORT_DESCRIPTOR	pImgImportDescriptor	= NULL;
+
+	return FALSE;
+}
+
+BOOL PEParse::BuildImgTLSTable()
+{
+	return FALSE;
+}
+
+
+BOOL PEParse::CopySections()
+{
+	PIMAGE_SECTION_HEADER pImgSectionHeader = NULL;
+
+	WORD sectionCount = pImgNtHeader->FileHeader.NumberOfSections;
+	if ( sectionCount == 0 )
+		return TRUE;
+	
+	pImgSectionHeader = (PIMAGE_SECTION_HEADER)( pImgNtHeader + 1);
+	for ( WORD index = 0; index < sectionCount; index ++)
+	{
+		memcpy_s( HModule + pImgSectionHeader->VirtualAddress, pImgSectionHeader->SizeOfRawData, PeFile+ pImgSectionHeader->PointerToRawData, pImgSectionHeader->SizeOfRawData);
+		pImgSectionHeader ++;
+	}
+
+	return TRUE;
+}
+
+BOOL PEParse::JmpToEngtryPoint()
+{
+	DWORD EntryPoint = pImgNtHeader->OptionalHeader.AddressOfEntryPoint;
+	typedef void (__cdecl PFNEntryPointFunction)(void);
+	
+	if ( EntryPoint == 0 )
+		return FALSE;
+
+	PFNEntryPointFunction pfnEntryPointFunction = (PFNEntryPointFunction)(HModule + EntryPoint);
+
+	// 这个地方来抓所有的错误信息，但是不知道能不能行呢。
+	try{
+		pfnEntryPointFunction();
+	}
+	catch(...)
+	{
+		return FALSE;
+	}
+
+	return TRUE;
+}
+
