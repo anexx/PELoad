@@ -63,6 +63,7 @@
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
 				SubSystem="1"
+				BaseAddress="0x10000000"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -115,7 +116,7 @@
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
-				RuntimeLibrary="2"
+				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -133,10 +134,12 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkIncremental="1"
-				GenerateDebugInformation="true"
+				GenerateDebugInformation="false"
 				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
+				ResourceOnlyDLL="true"
+				BaseAddress="0x07000000"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -170,6 +173,10 @@
 			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
+			<File
+				RelativePath=".\main.cpp"
+				>
+			</File>
 			<File
 				RelativePath=".\PEParse.cpp"
 				>

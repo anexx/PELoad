@@ -1,51 +1,61 @@
-#include <Windows.h>
+ï»¿#include <Windows.h>
 
+typedef NTSTATUS (WINAPI *PFNNtAllocateVirtualMemory)( HANDLE ,  LPVOID * BaseAddress, ULONG ZeroBit, PULONG RegionSize, ULONG AllocType, ULONG ProtectType );
 
 class PEParse
 {
 public:
-	PEParse( WCHAR * FileName );
 	PEParse( CHAR * FileName );
 
 	~PEParse(void);
 
 	BOOL ParseFile();
 
-	// »ñÈ¡peÍ·
+	// è·å–peå¤´
 	PIMAGE_DOS_HEADER		GetImgDosHeader();
-	// »ñÈ¡ntÍ·
+	// è·å–ntå¤´
 	PIMAGE_NT_HEADERS		GetImgNtHeader();
-	
-	// »ñÈ¡xx±í
-	PIMAGE_DATA_DIRECTORY	GetImgDataDirectory( DWORD DataIndex );
-	
 
-	// ĞŞ¸´µ¼Èë±í
+	// ä¿®å¤å¯¼å…¥è¡¨
 	BOOL BuildImgImportTable();
-	
-	//ĞŞ¸´TLS±í
+
+	//ä¿®å¤TLSè¡¨
 	BOOL BuildImgTLSTable();
-	
-	// Õâ¸öº¯ÊıÊÇÕâ¸ö¹¤³ÌÖĞ×îÖØÒªµÄÒ»¸öº¯Êı£¬³É°Ü¾ÍÔÚÕâ¸öº¯ÊıÉÏÁË¡£
+
+	// è¿™ä¸ªå‡½æ•°æ˜¯è¿™ä¸ªå·¥ç¨‹ä¸­æœ€é‡è¦çš„ä¸€ä¸ªå‡½æ•°ï¼Œæˆè´¥å°±åœ¨è¿™ä¸ªå‡½æ•°ä¸Šäº†ã€‚
 	BOOL GetImgModuleHandle();
 
 	BOOL CopySections();
 
-	// ÌøÈëµ½´úÂëÈë¿Ú´¦Ö´ĞĞ
+	// è·³å…¥åˆ°ä»£ç å…¥å£å¤„æ‰§è¡Œ
 	BOOL JmpToEngtryPoint();
+
+	// ä¿®å¤é‡å®šä½æ®µ
+	BOOL BuildRealocTable();
+
+	// æ£€æŸ¥æ˜¯å¦éœ€è¦é‡å®šä½ï¼Œå¦‚æœæ²¡æœ‰é‡å®šä½ï¼Œ
+	// åˆ™è¦è¿”å›é”™è¯¯
+	BOOL CheckNeedReloc();
+	
+	BOOL CheckNeedImport();
+
+	BOOL CheckNeedResource();
+
 private:
 
-	// »ñÈ¡¾µÏñ´óĞ¡
+	// è·å–é•œåƒå¤§å°
 	DWORD GetImgSize();
-	
-	// »ñÈ¡¾µÏñ»ùÖÊ
+
+	// è·å–é•œåƒåŸºè´¨
 	DWORD GetImgBase();
 
-	// »ñÈ¡peÎÄ¼şÊı¾İ
+	// è·å–peæ–‡ä»¶æ•°æ®
 	BOOL ReadPEFile( HANDLE hFile );
 
-	// Õâ¸öº¯ÊıÊµ¼ÊÊÇ¹¹ÔìpeÎÄ¼şµÄÄÚ´æ»ùÖ·¡£
+	// è¿™ä¸ªå‡½æ•°å®é™…æ˜¯æ„é€ peæ–‡ä»¶çš„å†…å­˜åŸºå€ã€‚
 	BOOL BuildImg();	
+
+	BOOL InitDymlicFunction();
 
 
 private:
@@ -54,4 +64,6 @@ private:
 	
 	LPBYTE PeFile;
 	LPBYTE HModule;
+
+	PFNNtAllocateVirtualMemory  NtAllocateVirtualMemory;
 };
